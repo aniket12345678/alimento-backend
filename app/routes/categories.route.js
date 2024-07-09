@@ -1,10 +1,20 @@
 const categories_route = require('express')();
 
-const { add, findAll, findOne } = require('../controllers/categories.controller');
+const { multerFn } = require('../enum/commonFunctions');
+const upload = multerFn('category');
 
-categories_route.get('/add', add);
+const {
+    add,
+    findAll,
+    findOne,
+    fetchCategoryImage,
+    deleteCategory
+} = require('../controllers/categories.controller');
+
+categories_route.post('/add', upload.single('attachments'), add);
 categories_route.get('/find/all', findAll);
-categories_route.get('/find/one', findOne);
-categories_route.get('/delete', findOne);
+categories_route.post('/find/one', findOne);
+categories_route.get('/img/:id', fetchCategoryImage);
+categories_route.post('/delete', deleteCategory);
 
 module.exports = { categories_route };

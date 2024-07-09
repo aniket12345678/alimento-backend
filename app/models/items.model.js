@@ -1,15 +1,24 @@
 const { Schema } = require('mongoose');
 
-const Categories_mdodel = new Schema({
+const Items_mdodel = new Schema({
     id: {
         type: Number,
         required: true
     },
-    category: {
+    user_id: {
+        type: Number,
+        required: true
+    },
+    item: {
         type: String,
         required: true
     },
-    category_img: {
+    category_id: {
+        type: Schema.Types.ObjectId,
+        ref: 'categories',
+        required: true
+    },
+    item_img: {
         type: String,
         required: true
     },
@@ -19,4 +28,4 @@ const Categories_mdodel = new Schema({
     }
 });
 
-module.exports = { Categories_mdodel }
+module.exports = { Items_mdodel }

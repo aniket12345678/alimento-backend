@@ -1,6 +1,14 @@
 const { Schema } = require('mongoose');
 
 const UsersCred_model = new Schema({
+    id: {
+        type: Number,
+        required: true,
+    },
+    user_role: {
+        type: Number, //1 - admin, 2 - user
+        required: true,
+    },
     email: {
         type: String,
         required: true
@@ -8,6 +16,10 @@ const UsersCred_model = new Schema({
     password: {
         type: String,
         required: true
+    },
+    is_email_verification: {
+        type: Boolean,
+        default: false
     }
 });
 
