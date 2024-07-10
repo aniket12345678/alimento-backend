@@ -4,11 +4,8 @@ const { multerFn, verifyToken } = require('../enum/commonFunctions');
 const upload = multerFn('item');
 
 const {
-    add,
-    findAll,
-    findOne,
-    deleteItem,
-    fetchItemImage
+    add, findAll, findOne,
+    deleteItem, fetchItemImage
 } = require('../controllers/items.controller');
 
 items_route.post('/add', upload.single('attachments'), verifyToken, add);
