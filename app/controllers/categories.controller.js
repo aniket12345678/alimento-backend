@@ -22,14 +22,36 @@ const add = async (req, res) => {
     }
 };
 
+const update = async (req, res) => {
+    try {
+        console.log('req.file:- ', req.file);
+        console.log('req.body:- ', req.body);
+        // const id = await fetchAutoincrementKey('category');
+        // const store = JSON.parse(req.body.data);
+        // store.category_img = req.file.filename;
+        // store.id = id;
+        // await Categories.create(store);
+        // return res.status(200).send({
+        //     message: 'Category added successfully',
+        //     code: 200
+        // });
+    } catch (error) {
+        console.log('category add error:- ', error);
+        // return res.status(500).send({
+        //     message: 'category add error',
+        //     code: 500
+        // });
+    }
+};
+
 const findAll = async (req, res) => {
     try {
-        const output = await Categories.find();
+        const output = await Categories.find({ is_deleted: false });
         return res.status(200).send({
             message: 'data fetched successfully',
             data: output,
             code: 200
-        })
+        });
     } catch (error) {
         console.log('findAll error:- ', error);
         return res.status(500).send({
@@ -41,10 +63,12 @@ const findAll = async (req, res) => {
 
 const findOne = async (req, res) => {
     try {
-        console.log('this is a findone function');
-        console.log('req.body:- ', req.body);
-        const data = await Categories.findOne({ id: Number(req.body.id) });
-        console.log('data:- ', data);
+        const data = await Categories.findOne({ _id: req.body.id });
+        return res.status(200).send({
+            message: 'data fetched successfully',
+            data: data,
+            code: 200
+        });
     } catch (error) {
         console.log('findOne error:- ', error);
     }
@@ -52,7 +76,7 @@ const findOne = async (req, res) => {
 
 const fetchCategoryImage = async (req, res) => {
     try {
-        const data = await Categories.findOne({ id: Number(req.params.id) });
+        const data = await Categories.findOne({ _id: req.params.id });
         const pathName = path.join(__dirname, '..', 'uploads', 'category', data.category_img);
         return res.sendFile(pathName);
     } catch (error) {
@@ -63,14 +87,17 @@ const fetchCategoryImage = async (req, res) => {
 const deleteCategory = async (req, res) => {
     try {
         const store = req.body;
-        const data = await Categories.updateOne({ id: Number(store.id) }, { is_deleted: false });
+        await Categories.updateOne({ id: Number(store.id) }, { is_deleted: true });
         return res.status(200).send({
-            message: 'data deleted successfully',
+            message: 'Data deleted successfully',
             code: 200
         });
     } catch (error) {
-        console.log('deleteCategory error:- ', error);
+        return res.status(500).send({
+            message: 'Some error occurred',
+            code: 500
+        })
     }
 };
 
-module.exports = { add, findAll, findOne, fetchCategoryImage, deleteCategory };
+module.exports = { add, update, findAll, findOne, fetchCategoryImage, deleteCategory };

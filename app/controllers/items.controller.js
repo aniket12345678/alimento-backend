@@ -25,7 +25,7 @@ const add = async (req, res) => {
 const findAll = async (req, res) => {
     try {
         const store = req.body;
-        const output = await Items.find({category_id:''}).populate('category_id').exec();
+        const output = await Items.find({ ...store, is_deleted: false }).populate('category_id').exec();
         return res.status(200).send({
             message: 'data fetched successfully',
             data: output,
@@ -40,9 +40,22 @@ const findAll = async (req, res) => {
     }
 };
 
-const findOne = (req, res) => {
-    console.log('this is a findone function');
-    console.log('req.body:- ', req.body);
+const findOne = async (req, res) => {
+    try {
+        const store = req.body;
+        const output = await Items.findOne({ ...store, is_deleted: false }).populate('category_id').exec();
+        return res.status(200).send({
+            message: 'data fetched successfully',
+            data: output,
+            code: 200
+        })
+    } catch (error) {
+        console.log('findAll error:- ', error);
+        return res.status(500).send({
+            message: 'Some error occurred',
+            code: 500
+        })
+    }
 };
 
 const fetchItemImage = async (req, res) => {
@@ -58,13 +71,16 @@ const fetchItemImage = async (req, res) => {
 const deleteItem = async (req, res) => {
     try {
         const store = req.body;
-        await Items.updateOne({ id: Number(store.id) }, { is_deleted: false });
+        await Items.updateOne({ id: Number(store.id) }, { is_deleted: true });
         return res.status(200).send({
-            message: 'data deleted successfully',
+            message: 'Item deleted successfully',
             code: 200
         });
     } catch (error) {
-        console.log('deleteCategory error:- ', error);
+        return res.status(500).send({
+            message: 'Some error occurred',
+            code: 500
+        })
     }
 };
 

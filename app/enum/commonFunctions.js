@@ -1,6 +1,8 @@
 const { PrimaryIdTable } = require("../models/index.model");
 const multer = require('multer');
 const path = require('path');
+// const jwt = process.env.JWTKEY;
+const jwt = require('jsonwebtoken');
 
 async function findPrimaryKey(tbl_name) {
     const findCollections = await PrimaryIdTable.findOne({ table_name: tbl_name });
@@ -33,4 +35,17 @@ function multerFn(data) {
     return multer({ storage: storage });
 }
 
-module.exports = { fetchAutoincrementKey, multerFn }
+const verifyToken = (req, res, next) => {
+    try {
+        const { authorization } = req.headers;
+        if (!authorization) {
+            throw { message: 'Auth token is missing', code: 401 };
+        }
+        const decoded = jwt.verify(authorization, process.env.JWTKEY);
+        next();
+    } catch (error) {
+        return res.status(401).send(error)
+    }
+}
+
+module.exports = { fetchAutoincrementKey, multerFn, verifyToken }

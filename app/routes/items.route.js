@@ -1,6 +1,6 @@
 const items_route = require('express')();
 
-const { multerFn } = require('../enum/commonFunctions');
+const { multerFn, verifyToken } = require('../enum/commonFunctions');
 const upload = multerFn('item');
 
 const {
@@ -11,10 +11,10 @@ const {
     fetchItemImage
 } = require('../controllers/items.controller');
 
-items_route.post('/add', upload.single('attachments'), add);
-items_route.post('/find/all', findAll);
-items_route.post('/find/one', findOne);
+items_route.post('/add', upload.single('attachments'), verifyToken, add);
+items_route.post('/find/all', verifyToken, findAll);
+items_route.post('/find/one', verifyToken, findOne);
 items_route.get('/img/:id', fetchItemImage);
-items_route.post('/delete', deleteItem);
+items_route.post('/delete', verifyToken, deleteItem);
 
 module.exports = { items_route }

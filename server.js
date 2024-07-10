@@ -11,7 +11,6 @@ exApp.use(bodyParser.urlencoded({ extended: true }))
 const { allRoutes } = require('./app/routes/index.route');
 const { newConnection } = require('./app/config/connection');
 
-
 exApp.listen(process.env.PORT, () => {
     console.log(`Server is running on ${process.env.PORT}`);
     newConnection().then((response) => {
