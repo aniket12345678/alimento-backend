@@ -24,23 +24,21 @@ const add = async (req, res) => {
 
 const update = async (req, res) => {
     try {
-        console.log('req.file:- ', req.file);
-        console.log('req.body:- ', req.body);
-        // const id = await fetchAutoincrementKey('category');
-        // const store = JSON.parse(req.body.data);
-        // store.category_img = req.file.filename;
-        // store.id = id;
-        // await Categories.create(store);
-        // return res.status(200).send({
-        //     message: 'Category added successfully',
-        //     code: 200
-        // });
+        const store = JSON.parse(req.body.data);
+        if (req.file) {
+            store.category_img = req.file.filename;
+        }
+        await Categories.updateOne({ _id: store['_id'] }, store);
+        return res.status(200).send({
+            message: 'Category updated successfully',
+            code: 200
+        });
     } catch (error) {
-        console.log('category add error:- ', error);
-        // return res.status(500).send({
-        //     message: 'category add error',
-        //     code: 500
-        // });
+        console.log('category update error:- ', error);
+        return res.status(500).send({
+            message: 'category update error',
+            code: 500
+        });
     }
 };
 

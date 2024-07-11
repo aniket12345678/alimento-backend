@@ -10,7 +10,7 @@ const {
 } = require('../controllers/categories.controller');
 
 categories_route.post('/add', upload.single('attachments'), verifyToken, add);
-categories_route.post('/update', verifyToken, update);
+categories_route.post('/update', upload.single('attachments'), verifyToken, update);
 categories_route.get('/find/all', verifyToken, findAll);
 categories_route.post('/find/one', verifyToken, findOne);
 categories_route.get('/img/:id', fetchCategoryImage);
