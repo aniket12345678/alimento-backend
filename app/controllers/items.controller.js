@@ -1,5 +1,5 @@
 const { Items } = require("../models/index.model");
-const { fetchAutoincrementKey } = require("../enum/commonFunctions");
+const { fetchAutoincrementKey, operationHandler } = require("../enum/commonFunctions");
 const path = require('path');
 
 const add = async (req, res) => {
@@ -9,16 +9,9 @@ const add = async (req, res) => {
         store.item_img = req.file.filename;
         store.id = id;
         await Items.create(store);
-        return res.status(200).send({
-            message: 'Item added successfully',
-            code: 200
-        });
+        operationHandler.handleSuccess(res, null, 'Item added successfully');
     } catch (error) {
-        console.log('item add error:- ', error);
-        return res.status(500).send({
-            message: 'item add error',
-            code: 500
-        });
+        operationHandler.handleError(res, error, 'item add error');
     }
 };
 
@@ -29,16 +22,9 @@ const update = async (req, res) => {
             store.item_img = req.file.filename;
         }
         await Items.updateOne({ _id: store['_id'] }, store);
-        return res.status(200).send({
-            message: 'Item updated successfully',
-            code: 200
-        });
+        operationHandler.handleSuccess(res, null, 'Item updated successfully');
     } catch (error) {
-        console.log('item add error:- ', error);
-        return res.status(500).send({
-            message: 'item add error',
-            code: 500
-        });
+        operationHandler.handleError(res, error, 'item update error');
     }
 };
 
@@ -50,17 +36,9 @@ const findAll = async (req, res) => {
                 path: 'category_id',
                 select: ['category']
             }).exec();
-        return res.status(200).send({
-            message: 'data fetched successfully',
-            data: output,
-            code: 200
-        })
+        operationHandler.handleSuccess(res, output, 'Data fetched successfully');
     } catch (error) {
-        console.log('findAll error:- ', error);
-        return res.status(500).send({
-            message: 'Some error occurred',
-            code: 500
-        })
+        operationHandler.handleError(res, error, 'Some error occurred');
     }
 };
 
@@ -69,17 +47,9 @@ const findOne = async (req, res) => {
         const store = req.body;
         const output = await Items.findOne({ ...store, is_deleted: false })
             .populate('category_id').exec();
-        return res.status(200).send({
-            message: 'data fetched successfully',
-            data: output,
-            code: 200
-        })
+        operationHandler.handleSuccess(res, output, 'Data fetched successfully');
     } catch (error) {
-        console.log('findAll error:- ', error);
-        return res.status(500).send({
-            message: 'Some error occurred',
-            code: 500
-        })
+        operationHandler.handleError(res, error, 'Some error occurred');
     }
 };
 
@@ -89,7 +59,7 @@ const fetchItemImage = async (req, res) => {
         const pathName = path.join(__dirname, '..', 'uploads', 'item', data.item_img);
         return res.sendFile(pathName);
     } catch (error) {
-        console.log('fetchCategoryImage error:- ', error);
+        operationHandler.handleError(res, error, 'Some error occurred');
     }
 };
 
@@ -97,15 +67,9 @@ const deleteItem = async (req, res) => {
     try {
         const store = req.body;
         await Items.updateOne({ id: Number(store.id) }, { is_deleted: true });
-        return res.status(200).send({
-            message: 'Item deleted successfully',
-            code: 200
-        });
+        operationHandler.handleSuccess(res, null, 'Item deleted successfully');
     } catch (error) {
-        return res.status(500).send({
-            message: 'Some error occurred',
-            code: 500
-        })
+        operationHandler.handleError(res, error, 'Some error occurred');
     }
 };
 

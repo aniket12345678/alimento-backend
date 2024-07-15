@@ -1,4 +1,4 @@
-const { fetchAutoincrementKey } = require("../enum/commonFunctions");
+const { fetchAutoincrementKey, operationHandler } = require("../enum/commonFunctions");
 const { Categories } = require("../models/index.model");
 const path = require('path');
 
@@ -9,16 +9,9 @@ const add = async (req, res) => {
         store.category_img = req.file.filename;
         store.id = id;
         await Categories.create(store);
-        return res.status(200).send({
-            message: 'Category added successfully',
-            code: 200
-        });
+        operationHandler.handleSuccess(res, null, 'Category added successfully');
     } catch (error) {
-        console.log('category add error:- ', error);
-        return res.status(500).send({
-            message: 'category add error',
-            code: 500
-        });
+        operationHandler.handleError(res, error, 'Some error occurred');
     }
 };
 
@@ -29,46 +22,27 @@ const update = async (req, res) => {
             store.category_img = req.file.filename;
         }
         await Categories.updateOne({ _id: store['_id'] }, store);
-        return res.status(200).send({
-            message: 'Category updated successfully',
-            code: 200
-        });
+        operationHandler.handleSuccess(res, null, 'Category updated successfully');
     } catch (error) {
-        console.log('category update error:- ', error);
-        return res.status(500).send({
-            message: 'category update error',
-            code: 500
-        });
+        operationHandler.handleError(res, error, 'Some error occurred');
     }
 };
 
 const findAll = async (req, res) => {
     try {
         const output = await Categories.find({ is_deleted: false });
-        return res.status(200).send({
-            message: 'data fetched successfully',
-            data: output,
-            code: 200
-        });
+        operationHandler.handleSuccess(res, output, 'data fetched successfully');
     } catch (error) {
-        console.log('findAll error:- ', error);
-        return res.status(500).send({
-            message: 'Some error occurred',
-            code: 500
-        })
+        operationHandler.handleError(res, error, 'Some error occurred');
     }
 };
 
 const findOne = async (req, res) => {
     try {
         const data = await Categories.findOne({ _id: req.body.id });
-        return res.status(200).send({
-            message: 'data fetched successfully',
-            data: data,
-            code: 200
-        });
+        operationHandler.handleSuccess(res, data, 'data fetched successfully');
     } catch (error) {
-        console.log('findOne error:- ', error);
+        operationHandler.handleError(res, error, 'Some error occurred');
     }
 };
 
@@ -78,7 +52,7 @@ const fetchCategoryImage = async (req, res) => {
         const pathName = path.join(__dirname, '..', 'uploads', 'category', data.category_img);
         return res.sendFile(pathName);
     } catch (error) {
-        console.log('fetchCategoryImage error:- ', error);
+        operationHandler.handleError(res, error, 'Some error occurred');
     }
 };
 
@@ -86,15 +60,9 @@ const deleteCategory = async (req, res) => {
     try {
         const store = req.body;
         await Categories.updateOne({ id: Number(store.id) }, { is_deleted: true });
-        return res.status(200).send({
-            message: 'Data deleted successfully',
-            code: 200
-        });
+        operationHandler.handleSuccess(res, null, 'Data deleted successfully');
     } catch (error) {
-        return res.status(500).send({
-            message: 'Some error occurred',
-            code: 500
-        })
+        operationHandler.handleError(res, error, 'Some error occurred');
     }
 };
 

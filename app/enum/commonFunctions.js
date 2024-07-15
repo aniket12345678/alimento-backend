@@ -48,4 +48,21 @@ const verifyToken = (req, res, next) => {
     }
 }
 
-module.exports = { fetchAutoincrementKey, multerFn, verifyToken }
+const operationHandler = {
+    handleSuccess: (res, data, message) => {
+        return res.status(200).send({
+            message: message,
+            data: data,
+            code: 200
+        });
+    },
+    handleError: (res, error, message) => {
+        console.log(`${message}:- ${error}`);
+        return res.status(500).send({
+            message: message,
+            code: 500
+        })
+    }
+}
+
+module.exports = { fetchAutoincrementKey, multerFn, verifyToken, operationHandler }

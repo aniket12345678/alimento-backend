@@ -1,3 +1,4 @@
+const { operationHandler } = require("../enum/commonFunctions");
 const { UsersCred, Users } = require("../models/index.model");
 
 const add = (req, res) => {
@@ -14,8 +15,8 @@ const findAll = async (req, res) => {
             code: 200,
             data: allUsers
         });
-    } catch (err) {
-        console.log('err:- ', err);
+    } catch (error) {
+        operationHandler.handleError(res, error, 'Some error occurred');
     }
 };
 
