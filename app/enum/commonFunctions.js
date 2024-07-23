@@ -1,8 +1,8 @@
 const { PrimaryIdTable } = require("../models/index.model");
 const multer = require('multer');
 const path = require('path');
-// const jwt = process.env.JWTKEY;
 const jwt = require('jsonwebtoken');
+const Joi = require("joi");
 
 async function findPrimaryKey(tbl_name) {
     const findCollections = await PrimaryIdTable.findOne({ table_name: tbl_name });
@@ -65,4 +65,16 @@ const operationHandler = {
     }
 }
 
-module.exports = { fetchAutoincrementKey, multerFn, verifyToken, operationHandler }
+const joiMiddleware = (schema) => {
+    return async (req, res, next) => {
+        // req.body.name = 'aniket';
+        const { error } = schema.validate(req.body);
+        if (error) {
+            const joiErrMessage = error.details.map((x) => x.message);
+            operationHandler.handleError(res, error, joiErrMessage)
+        }
+        next();
+    }
+}
+
+module.exports = { fetchAutoincrementKey, multerFn, verifyToken, joiMiddleware, operationHandler }
