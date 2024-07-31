@@ -12,7 +12,11 @@ const { validateCategory } = require('../validationSchema/schema');
 
 categories_route.post(
     '/add',
-    [upload.single('attachments'), joiMiddleware(validateCategory.add), verifyToken],
+    [
+        upload.single('attachments'), 
+        joiMiddleware(validateCategory.add), 
+        verifyToken
+    ],
     add
 );
 categories_route.post(

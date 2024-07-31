@@ -1,15 +1,15 @@
 const { model } = require('mongoose');
 
-const { Users_model } = require('./users.model');
-const { UsersCred_model } = require('./user_cred.model');
-const { Categories_mdodel } = require('./categories.model');
+const { UsersModel } = require('./users.model');
+const { UsersCredModel } = require('./userCred.model');
+const { CategoriesModel } = require('./categories.model');
 const { PrimaryIdTable_model } = require('./primaryIdTable.model');
-const { Items_mdodel } = require('./items.model');
+const { ItemsModel } = require('./items.model');
 
-const Users = model('users', Users_model, 'users');
-const UsersCred = model('user_cred', UsersCred_model, 'user_cred');
-const Categories = model('categories', Categories_mdodel, 'categories');
-const Items = model('items', Items_mdodel, 'items');
+const Users = model('users', UsersModel, 'users');
+const Items = model('items', ItemsModel, 'items');
+const UsersCred = model('user_cred', UsersCredModel, 'user_cred');
+const Categories = model('categories', CategoriesModel, 'categories');
 const PrimaryIdTable = model('primaryIdTbl', PrimaryIdTable_model, 'primaryIdTbl');
 
 module.exports = { Categories, Users, UsersCred, PrimaryIdTable, Items };

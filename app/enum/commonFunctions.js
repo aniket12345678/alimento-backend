@@ -66,14 +66,19 @@ const operationHandler = {
 }
 
 const joiMiddleware = (schema) => {
-    return async (req, res, next) => {
-        // req.body.name = 'aniket';
-        const { error } = schema.validate(req.body);
-        if (error) {
-            const joiErrMessage = error.details.map((x) => x.message);
-            operationHandler.handleError(res, error, joiErrMessage)
+    try {
+        return async (req, res, next) => {
+            const { error } = schema.validate(req.body);
+            if (error) {
+                const joiErrMessage = error.details.map((x) => x.message);
+                operationHandler.handleError(res, error, joiErrMessage)
+            }
+            else {
+                next();
+            }
         }
-        next();
+    } catch (error) {
+        operationHandler.handleError(res, error, 'some error occured')
     }
 }
 

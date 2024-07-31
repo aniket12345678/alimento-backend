@@ -1,6 +1,6 @@
 const { Schema } = require('mongoose');
 
-const Categories_mdodel = new Schema({
+const CategoriesModel = new Schema({
     id: {
         type: Number,
         required: true
@@ -19,4 +19,4 @@ const Categories_mdodel = new Schema({
     }
 });
 
-module.exports = { Categories_mdodel }
+module.exports = { CategoriesModel }

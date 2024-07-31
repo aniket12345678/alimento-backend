@@ -1,11 +1,7 @@
 const { Schema } = require('mongoose');
 
-const Items_mdodel = new Schema({
+const ItemsModel = new Schema({
     id: {
-        type: Number,
-        required: true
-    },
-    user_id: {
         type: Number,
         required: true
     },
@@ -28,4 +24,4 @@ const Items_mdodel = new Schema({
     }
 });
 
-module.exports = { Items_mdodel }
+module.exports = { ItemsModel }

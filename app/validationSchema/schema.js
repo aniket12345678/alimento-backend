@@ -9,6 +9,7 @@ const validateCategory = {
     }),
     update: Joi.object({
         data: Joi.string().required(),
+        attachments: Joi.optional(),
     }),
 }
 

@@ -1,6 +1,6 @@
 const { Schema } = require('mongoose');
 
-const Users_model = new Schema({
+const UsersModel = new Schema({
     id: {
         type: Number,
         required: true,
@@ -29,4 +29,4 @@ const Users_model = new Schema({
     }
 });
 
-module.exports = { Users_model }
+module.exports = { UsersModel }

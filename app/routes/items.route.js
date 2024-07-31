@@ -8,8 +8,8 @@ const {
     deleteItem, fetchItemImage, update
 } = require('../controllers/items.controller');
 
-items_route.post('/add', upload.single('attachments'), verifyToken, add);
-items_route.post('/update', upload.single('attachments'), verifyToken, update);
+items_route.post('/add', [upload.single('attachments'), verifyToken], add);
+items_route.post('/update', [upload.single('attachments'), verifyToken], update);
 items_route.post('/find/all', verifyToken, findAll);
 items_route.post('/find/one', verifyToken, findOne);
 items_route.get('/img/:id', fetchItemImage);
