@@ -2,7 +2,6 @@ const { PrimaryIdTable } = require("../models/index.model");
 const multer = require('multer');
 const path = require('path');
 const jwt = require('jsonwebtoken');
-const Joi = require("joi");
 
 async function findPrimaryKey(tbl_name) {
     const findCollections = await PrimaryIdTable.findOne({ table_name: tbl_name });
@@ -38,12 +37,18 @@ function multerFn(data) {
 const verifyToken = (req, res, next) => {
     try {
         const { authorization } = req.headers;
+
         if (!authorization) {
             throw { message: 'Auth token is missing', code: 401 };
         }
-        const decoded = jwt.verify(authorization, process.env.JWTKEY);
+        if (!authorization.includes('Bearer')) {
+            throw { message: 'Invalid auth token', code: 401 };
+        }
+        const mainToken = authorization.split(' ');
+        const decoded = jwt.verify(mainToken[1], process.env.JWTKEY);
         next();
     } catch (error) {
+        console.log('error:- ', error);
         return res.status(401).send(error)
     }
 }
@@ -71,7 +76,7 @@ const joiMiddleware = (schema) => {
             const { error } = schema.validate(req.body);
             if (error) {
                 const joiErrMessage = error.details.map((x) => x.message);
-                operationHandler.handleError(res, error, joiErrMessage)
+                operationHandler.handleError(res, error, 'Validation error');
             }
             else {
                 next();

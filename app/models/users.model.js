@@ -6,7 +6,6 @@ const UsersModel = new Schema({
         required: true,
     },
     user_id: {
-        // type: Number,
         type: Schema.Types.ObjectId,
         required: true,
         ref:'user_cred'

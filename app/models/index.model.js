@@ -1,10 +1,10 @@
 const { model } = require('mongoose');
 
 const { UsersModel } = require('./users.model');
+const { ItemsModel } = require('./items.model');
 const { UsersCredModel } = require('./userCred.model');
 const { CategoriesModel } = require('./categories.model');
 const { PrimaryIdTable_model } = require('./primaryIdTable.model');
-const { ItemsModel } = require('./items.model');
 
 const Users = model('users', UsersModel, 'users');
 const Items = model('items', ItemsModel, 'items');

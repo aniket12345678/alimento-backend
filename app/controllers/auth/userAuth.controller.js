@@ -26,7 +26,7 @@ const userSignup = async (req, res) => {
 
             const userAutoIncrementId = await fetchAutoincrementKey('users');
             store.id = userAutoIncrementId;
-            store.user_id = response.id;
+            store.user_id = response['_id'];
 
             await Users.create(store);
 
@@ -35,8 +35,8 @@ const userSignup = async (req, res) => {
                 code: 200
             });
         }
-
     } catch (error) {
+        console.log('error:- ', error);
         return res.status(500).send({
             message: 'Facing some technical issue during userSignup',
             code: 500
@@ -60,9 +60,8 @@ const userSignin = async (req, res) => {
                         code: 200
                     });
                 } else {
-                    emailVerificationMail(checkEmail.email);
                     return res.status(200).send({
-                        message: 'Check your email',
+                        message: 'Email verification is pending',
                         code: 600
                     });
                 }
@@ -87,4 +86,33 @@ const userSignin = async (req, res) => {
     }
 };
 
-module.exports = { userSignin, userSignup }
+const userEmailVerify = async (req, res) => {
+    try {
+        console.log('req.body:- ', req.body);
+        return false;
+        const store = req.body;
+        const checkEmail = await UsersCred.findOne({ email: store.email });
+        if (checkEmail) {
+            emailVerificationMail(checkEmail.email);
+            return res.status(200).send({
+                message: 'Successfully logged in',
+                user_id: checkEmail.id,
+                auth_token: token,
+                code: 200
+            });
+        } else {
+            return res.status(200).send({
+                message: 'User does not exist',
+                code: 500
+            })
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            message: 'Facing some technical issue during userSignup',
+            code: 500
+        });
+    }
+};
+
+module.exports = { userSignin, userSignup, userEmailVerify }
