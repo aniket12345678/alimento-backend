@@ -29,6 +29,7 @@ const validateAuth = {
             phone_number: Joi.string().required(),
             email: Joi.string().required(),
             password: Joi.string().required(),
+            confirm_password: Joi.string().required(),
         })
     },
     admin: {
