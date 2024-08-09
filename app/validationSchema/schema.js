@@ -24,12 +24,14 @@ const validateAuth = {
             password: Joi.string().required(),
         }),
         signUp: Joi.object({
+            user_role: Joi.number().required(),
             first_name: Joi.string().required(),
             last_name: Joi.string().required(),
             phone_number: Joi.string().required(),
             email: Joi.string().required(),
             password: Joi.string().required(),
             confirm_password: Joi.string().required(),
+            conditions: Joi.boolean().required(),
         })
     },
     admin: {
