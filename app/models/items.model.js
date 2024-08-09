@@ -18,6 +18,10 @@ const ItemsModel = new Schema({
         type: String,
         required: true
     },
+    price: {
+        type: Number,
+        required: true
+    },
     is_deleted: {
         type: Boolean,
         default: false
