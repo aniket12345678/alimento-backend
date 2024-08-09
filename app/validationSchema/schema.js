@@ -24,7 +24,9 @@ const validateAuth = {
             password: Joi.string().required(),
         }),
         signUp: Joi.object({
-            data: Joi.string().required(),
+            first_name: Joi.string().required(),
+            last_name: Joi.string().required(),
+            phone_number: Joi.string().required(),
         })
     },
     admin: {
