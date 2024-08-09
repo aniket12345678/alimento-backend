@@ -14,7 +14,7 @@ const { newConnection } = require('./app/config/connection');
 exApp.listen(process.env.PORT, () => {
     console.log(`Server is running on ${process.env.PORT}`);
     newConnection().then((response) => {
-        console.log('connection successfull');
+        console.log('database connection successfull');
     }).catch((err) => {
         console.log('err', err);
     });
