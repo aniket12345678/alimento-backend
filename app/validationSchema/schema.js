@@ -32,7 +32,14 @@ const validateAuth = {
             password: Joi.string().required(),
             confirm_password: Joi.string().required(),
             conditions: Joi.boolean().required(),
-        })
+        }),
+        emailVerify: Joi.object({
+            email: Joi.string().required()
+        }),
+        confirmEmailVerify: Joi.object({
+            code: Joi.string().required(),
+            user_id: Joi.string().required()
+        }),
     },
     admin: {
         signIn: Joi.object({

@@ -87,4 +87,22 @@ const joiMiddleware = (schema) => {
     }
 }
 
-module.exports = { fetchAutoincrementKey, multerFn, verifyToken, joiMiddleware, operationHandler }
+function randomCodeGenerator(limit) {
+    let arr = [
+        ...Array(26).fill(0).map((_, i) => String.fromCharCode(i + 65)),
+        ...Array(26).fill(0).map((_, i) => String.fromCharCode(i + 96)),
+        ...Array(8).fill(0).map((_, i) => i + 1)
+    ];
+    let html = '';
+    for (let i = 0; i < limit; i++) {
+        html += arr[Math.floor(1 + Math.random() * 58)];
+    }
+    return html;
+}
+
+module.exports = {
+    fetchAutoincrementKey,
+    multerFn, verifyToken,
+    joiMiddleware, operationHandler,
+    randomCodeGenerator
+}

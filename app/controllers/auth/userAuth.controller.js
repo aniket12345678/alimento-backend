@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const { fetchAutoincrementKey } = require("../../enum/commonFunctions");
+const { randomCodeGenerator } = require("../../enum/commonFunctions");
 const { emailVerificationMail } = require('../../enum/mail');
 const { UsersCred, Users } = require("../../models/index.model");
 const jwt = require('jsonwebtoken');
@@ -19,13 +19,7 @@ const userSignup = async (req, res) => {
         } else {
             store.password = bcrypt.hashSync(store.password, 10);
 
-            const userCredAutoIncrementId = await fetchAutoincrementKey('user_cred');
-            store.id = userCredAutoIncrementId;
-
             const response = await UsersCred.create(store);
-
-            const userAutoIncrementId = await fetchAutoincrementKey('users');
-            store.id = userAutoIncrementId;
             store.user_id = response['_id'];
 
             await Users.create(store);
@@ -88,16 +82,21 @@ const userSignin = async (req, res) => {
 
 const userEmailVerify = async (req, res) => {
     try {
-        console.log('req.body:- ', req.body);
-        return false;
         const store = req.body;
         const checkEmail = await UsersCred.findOne({ email: store.email });
         if (checkEmail) {
-            emailVerificationMail(checkEmail.email);
+            if (checkEmail.is_email_verification) {
+                return res.status(200).send({
+                    message: 'Your email is already verified',
+                    code: 500
+                });
+            }
+            let randomCode = randomCodeGenerator(6);
+            let verifyURL = `${process.env.FRONT_END_URL}confirm/email/${checkEmail['_id']}/${randomCode}`;
+            await UsersCred.updateOne({ email: store.email }, { email_verification_code: randomCode });
+            emailVerificationMail(checkEmail.email, verifyURL);
             return res.status(200).send({
-                message: 'Successfully logged in',
-                user_id: checkEmail.id,
-                auth_token: token,
+                message: 'Check your mail',
                 code: 200
             });
         } else {
@@ -115,4 +114,45 @@ const userEmailVerify = async (req, res) => {
     }
 };
 
-module.exports = { userSignin, userSignup, userEmailVerify }
+const userConfirmEmail = async (req, res) => {
+    try {
+        const { code, user_id } = req.body;
+
+        const checkUserExists = await UsersCred.findOne({
+            email_verification_code: code,
+            _id: user_id,
+        });
+        if (checkUserExists) {
+            if (checkUserExists.is_email_verification) {
+                return res.status(200).send({
+                    message: 'Your email has already verified',
+                    code: 200
+                });
+            } else {
+                await UsersCred.updateOne({
+                    _id: user_id,
+                }, {
+                    is_email_verification: true,
+                    email_verification_code: ''
+                });
+                return res.status(200).send({
+                    message: 'Your email has been verified',
+                    code: 200
+                });
+            }
+        } else {
+            return res.status(200).send({
+                message: 'User does not exist',
+                code: 500
+            })
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send({
+            message: 'Facing some technical issue during userSignup',
+            code: 500
+        });
+    }
+};
+
+module.exports = { userSignin, userSignup, userEmailVerify, userConfirmEmail }

@@ -1,20 +1,18 @@
 const nodemailer = require('nodemailer');
 
-function emailVerificationMail(data) {
-    process.env.USERNAME
-    process.env.APP_PASSWORD
+function emailVerificationMail(data, url) {
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: process.env.USERNAME,
+            user: process.env.APP_USERNAME,
             pass: process.env.APP_PASSWORD
         }
     });
     const mailOptions = {
-        from: process.env.USERNAME,
+        from: process.env.APP_USERNAME,
         to: data,
-        subject: 'your phone has been hacked',
-        text: 'That was easy!'
+        subject: 'Email Verification',
+        html:`<div><div>That was easy!</div><div>${url}</div></div>`
     };
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
@@ -25,4 +23,4 @@ function emailVerificationMail(data) {
     });
 }
 
-module.exports = { emailVerificationMail }
+module.exports = { emailVerificationMail };
