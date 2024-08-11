@@ -51,4 +51,10 @@ const validateAuth = {
     },
 }
 
-module.exports = { validateCategory, validateAuth }
+const validateOrder = {
+    createPaymetIntent: Joi.object({
+        totalAmount: Joi.number().required(),
+    }),
+}
+
+module.exports = { validateCategory, validateAuth, validateOrder }
