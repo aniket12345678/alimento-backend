@@ -2,6 +2,7 @@ const nodemailer = require('nodemailer');
 
 function emailVerificationMail(data, url) {
     const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
         service: 'gmail',
         auth: {
             user: process.env.APP_USERNAME,
@@ -12,7 +13,7 @@ function emailVerificationMail(data, url) {
         from: process.env.APP_USERNAME,
         to: data,
         subject: 'Email Verification',
-        html:`<div><div>That was easy!</div><div>${url}</div></div>`
+        html: `<div><div>That was easy!</div><div>${url}</div></div>`
     };
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
