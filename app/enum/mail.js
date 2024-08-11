@@ -1,9 +1,14 @@
 const nodemailer = require('nodemailer');
 
 function emailVerificationMail(data, url) {
+    console.log('process.env.APP_USERNAME:- ', process.env.APP_USERNAME);
+    console.log('process.env.APP_PASSWORD:- ', process.env.APP_PASSWORD);
     const transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
-        service: 'gmail',
+        // authMethod: '',
+        // service: 'gmail',
+        port: 587,
+        secure: false,
         auth: {
             user: process.env.APP_USERNAME,
             pass: process.env.APP_PASSWORD
