@@ -4,12 +4,21 @@ const createPaymentIntent = async (req, res) => {
     try {
         const { totalAmount } = req.body;
         const paymentIntent = await stripe.paymentIntents.create({
-            currency: 'usd',
+            currency: 'INR',
             amount: totalAmount,
-            automatic_payment_methods: { enabled: true }
+            automatic_payment_methods: { enabled: true },
+            description: "for amazon-clone project",
+            shipping: {
+                name: "Random singh",
+                address: {
+                    line1: "510 Townsend St",
+                    postal_code: "98140",
+                    city: "San Francisco",
+                    state: "CA",
+                    country: "US",
+                },
+            },
         });
-
-        console.log('paymentIntent:- ', paymentIntent);
 
         res.send({
             clientSecret: paymentIntent.client_secret,
